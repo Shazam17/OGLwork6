@@ -1,0 +1,4 @@
+﻿  work6CG.cpp
+c:\users\johnpower\source\repos\work6cg\work6cg\work6cg.cpp(154): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\johnpower\source\repos\work6cg\work6cg\work6cg.cpp(173): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  work6CG.vcxproj -> C:\Users\JohnPower\source\repos\work6CG\x64\Debug\work6CG.exe
