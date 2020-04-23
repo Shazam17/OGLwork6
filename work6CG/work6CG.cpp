@@ -1,4 +1,4 @@
-#include <glad/glad.h>
+﻿#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -18,25 +18,16 @@ vec3 forward(1.0f, 0.0, 0.0f);
 vec3 right(0.0f, 0.0, 1.0f);
 vec3 processKeys(GLFWwindow* window , float dt) {
 	vec3 result(0.0f);
-	int stateW = glfwGetKey(window, GLFW_KEY_UP);
-	if (stateW == GLFW_PRESS)
-	{
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
 		result += forward;
 	}
-	int stateS = glfwGetKey(window, GLFW_KEY_DOWN);
-	if (stateS == GLFW_PRESS)
-	{
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
 		result -= forward;
 	}
-
-	int stateA = glfwGetKey(window, GLFW_KEY_LEFT);
-	if (stateA == GLFW_PRESS)
-	{
+	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
 		result -= right;
 	}
-	int stateD = glfwGetKey(window, GLFW_KEY_RIGHT);
-	if (stateD == GLFW_PRESS)
-	{
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
 		result += right;
 	}
 
@@ -66,6 +57,7 @@ int main(void)
 	}
 
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_STENCIL_TEST);
 
 	float vertices[] = {
 		-0.5f,0.0f,0.0f,
@@ -130,7 +122,7 @@ int main(void)
 	glLineWidth(3.0f);
 	glfwWindowHint(GLFW_SAMPLES, 4);
 
-	Shader basic("shaders/basic.shader");
+	Shader basic("basic.shader");
 
 	vec3 renderColor(1.0f, 0.5f,0.0f);
 	vec3 lineColor(0, 0, 0);
@@ -167,6 +159,7 @@ int main(void)
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
 
+
 	bool isRotating = false;
 	while (!glfwWindowShouldClose(window))
 	{
@@ -175,8 +168,10 @@ int main(void)
 
 		lastTime = tTime;
 
-	
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
 		ImGui_ImplOpenGL3_NewFrame();
@@ -210,12 +205,13 @@ int main(void)
 			basic.setUniform4m("u_model", res);
 		}
 
+	
+		//render mesh
 		basic.setUniformVec3("renderColor", renderColor);
 		basic.bind();
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ib);
 		glDrawElements(GL_TRIANGLES, 21, GL_UNSIGNED_INT, 0);
-		
-
+		//render lines above the mesh
 		basic.setUniformVec3("renderColor", lineColor);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibLines);
 		basic.bind();

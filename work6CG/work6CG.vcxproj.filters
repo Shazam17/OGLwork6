@@ -77,6 +77,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
-    <None Include="shaders\basic.shader" />
+    <None Include="basic.shader" />
   </ItemGroup>
 </Project>
